@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="app" :class="typeof weather.main != 'undefined' && weather.main.temp > 16 ? 'warm' : '' ">
     <main>
       <div class="search-box">
         <input 
@@ -14,7 +14,7 @@
       <div class="weather-wrap" v-if="typeof weather.main != 'undefined'">
         <div class="location-box">
           <div class="location">{{weather.name}}, {{weather.sys.country}}</div>
-          <div class="date">Wednesday 11, February 2020</div>
+          <div class="date">{{ dateBuilder() }}</div>
         </div>
 
         <div class="weather-box">
@@ -29,9 +29,11 @@
 <script>
 
 export default {
+
   name: 'App',
   data () {
     return {
+      
       api_key: 'eff70d1646c49425e23127f5b51c06cb',
       url_base: 'https://api.openweathermap.org/data/2.5/',
       query: '',
@@ -51,6 +53,19 @@ export default {
 
     setResults(results) {
       this.weather = results;
+    },
+
+    dateBuilder() {
+      let today = new Date();
+      let months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+      let days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+
+      let day = days[today.getDay()];
+      let date = today.getDate();
+      let month = months[today.getMonth()];
+      let year = today.getFullYear();
+
+      return `${day} ${date}, ${month} ${year}`;
     }
   }
 }
@@ -72,6 +87,10 @@ export default {
     background-size: cover;
     background-position: bottom;
     transition: 0.4s;
+  }
+
+  #app.warm {
+    background-image: url('./assets/warm-bg.jpg');
   }
 
   main {
